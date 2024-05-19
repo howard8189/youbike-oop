@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to YouBike Rental</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a th:href="@{/login}">Login</a></li>
+                <li><a th:href="@{/register}">Register</a></li>
+                <li><a th:href="@{/stations}">Stations</a></li>
+                <li><a th:href="@{/rent}">Rent a Bike</a></li>
+                <li><a th:href="@{/return}">Return a Bike</a></li>
+                <li><a th:href="@{/contact}">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Welcome to YouBike Rental System</h1>
+        <p>This is your go-to platform for renting and managing your bikes conveniently.</p>
+        <p>Browse stations, check bike availability, manage your rentals and more.</p>
+    </main>
+    <footer>
+        <p>&copy; 2024 YouBike Rental, Inc. All rights reserved.</p>
+    </footer>
+</body>
+</html>
