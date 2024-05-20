@@ -1,6 +1,9 @@
-# youbike-oop
-112學年度下學期「物件導向程式語言」期末專案相關檔案
+# 112學年度物件導向程式語言設計期末指定題作業
+此頁面主要紀錄台灣大學工程科學及海洋工程學系黃乾綱教授於112學年度第二學期開設的物件導向程式語言(Object Oriented Programming Language)課程。\
+本項作業為指定題：Youbike Rental System
 
+以下簡介本系統之架構圖(hierarchy):
+<pre>
 youbike_rental_project/
 │
 ├── src/
@@ -8,18 +11,21 @@ youbike_rental_project/
 │   │   ├── java/
 │   │   │   └── com.youbikerental/
 │   │   │       ├── config/
-│   │   │       │   └── MongoDBConfig.java          # MongoDB 配置
+│   │   │       │   └── SecurityConfig.java         # 安全配置
 │   │   │       ├── controller/
+│   │   │       │   ├── MainController.java         # 處理整體請求
 │   │   │       │   ├── UserController.java         # 處理用戶相關請求
 │   │   │       │   ├── BikeController.java         # 處理自行車相關請求
 │   │   │       │   ├── StationController.java      # 處理站點相關請求
-│   │   │       │   └── RentalController.java       # 處理租借記錄相關請求
+│   │   │       │   ├── PostController.java         # 處理車柱相關請求
+│   │   │       │   ├── RentalController.java       # 處理租借記錄相關請求
+│   │   │       │   └── EasyCardController.java     # 處理儲值卡相關請求
 │   │   │       ├── model/
 │   │   │       │   ├── User.java                   # 用戶模型
 │   │   │       │   ├── Bike.java                   # 自行車模型
 │   │   │       │   ├── Station.java                # 站點模型
 │   │   │       │   ├── Post.java                   # 車柱模型
-│   │   │       │   ├── Rental.java                 # 租借紀錄模型
+│   │   │       │   ├── Rental.java                 # 租借記錄模型
 │   │   │       │   └── EasyCard.java               # 悠遊卡模型
 │   │   │       ├── repository/
 │   │   │       │   ├── UserRepository.java         # 用戶數據存儲庫
@@ -40,7 +46,17 @@ youbike_rental_project/
 │   │       ├── templates/                          # Thymeleaf 模板目錄
 │   │       │   ├── index.html                      # 主頁面
 │   │       │   ├── login.html                      # 登入頁面
-│   │       │   └── dashboard.html                  # 控制台頁面
+│   │       │   ├── register.html                   # 註冊頁面
+│   │       │   ├── stations.html                   # 站點查詢
+│   │       │   ├── rent.html                       # 租車介面
+│   │       │   ├── return.html                     # 還車介面
+│   │       │   ├── topup.html                      # 儲值介面
+│   │       │   ├── history.html                    # 租借記錄
+│   │       │   ├── search.html                     # 站點搜索
+│   │       │   ├── detail.html                     # 站點詳情
+│   │       │   ├── contact.html                    # 聯繫官方
+│   │       │   ├── dashboard.html                  # 管理員控制台
+│   │       │   └── map.html                        # 地圖介面
 │   │       ├── application.properties              # 應用配置文件
 │   │       └── static/                             # 靜態資源，如 CSS, JavaScript
 │   └── test/                                       # 測試目錄
@@ -49,3 +65,6 @@ youbike_rental_project/
 │               ├── UserControllerTest.java         # 用戶控制器測試
 │               └── UserServiceTest.java            # 用戶服務測試
 └── pom.xml                                         # Maven 配置文件
+
+
+</pre>
