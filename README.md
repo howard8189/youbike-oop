@@ -2,6 +2,26 @@
 此頁面主要紀錄台灣大學工程科學及海洋工程學系黃乾綱教授於112學年度第二學期開設的物件導向程式語言(Object Oriented Programming Language)課程。\
 本項作業為指定題：Youbike Rental System
 
+本專案旨在開發一個YouBike的借還車系統，目的是為租車使用者和維修人員提供優質及多樣化的服務。系統包括用戶的註冊、登入、租借和歸還自行車的功能，並計劃未來整合OpenStreetMap來增加地圖服務，提高用戶體驗。
+
+## 技術
+### 後端
+程式語言與環境： 使用Java 17進行開發，採用非模組化的設計策略。\
+主框架： Spring Boot 3.2.5，利用其強大的生態系統優化後端服務的開發和維護。\
+數據持久化： 整合Spring Data JPA和MySQL，使用MySQL作為後端數據存儲解決方案。\
+安全性： 採用Spring Security實現用戶認證和權限控制。
+
+### 前端
+模板引擎： 使用Thymeleaf作為服務端的模板引擎，用於動態生成HTML頁面。\
+樣式： CSS與JavaScript用於前端樣式和行為的設計，由Thymeleaf管理靜態資源。\
+
+### 資源管理
+Maven用於管理和配置項目依賴，確保開發和部署流程的一致性。
+
+### 預期未來擴展
+部署： 計劃使用Vercel來部署和展示web應用，以提高訪問速度和用戶體驗。
+地圖服務： 計劃嵌入OpenStreetMap來增加導航和地理位置功能，使用戶能更方便地找到附近的YouBike停車點。
+#
 以下簡介本系統之架構圖(hierarchy):
 <pre>
 youbike_rental_project/
