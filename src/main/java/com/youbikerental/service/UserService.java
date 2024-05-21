@@ -7,8 +7,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service // Marks this class as a Spring service
 public class UserService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+	
     @Autowired // Automatically injects UserRepository instance
     private UserRepository userRepository;
 
@@ -17,8 +24,15 @@ public class UserService {
 
     // Register a new user with encrypted password
     public User registerUser(User newUser) {
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword())); // Encodes the password before saving
-        return userRepository.save(newUser); // Saves the new user to the database
+        logger.debug("Registering user: {}", newUser);
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        User savedUser = userRepository.save(newUser);
+        if (savedUser != null && savedUser.getId() != null) {
+            logger.debug("User registered successfully with ID: {}", savedUser.getId());
+        } else {
+            logger.debug("Failed to register user");
+        }
+        return savedUser;
     }
 
     // Authenticate a user by their phone number and password

@@ -4,10 +4,41 @@
     <meta charset="UTF-8">
     <title>Register | YouBike Rental</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // 阻止表單的預設提交行為
+            const formData = {
+                phoneNumber: document.getElementById('phoneNumber').value,
+                password: document.getElementById('password').value,
+                email: document.getElementById('email').value,
+                nationalId: document.getElementById('nationalId').value,
+                easycardNumber: document.getElementById('easycardNumber').value
+            };
+
+            fetch('/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Something went wrong');
+            }).then(data => {
+                console.log('Success:', data);
+                alert('Registration successful!');
+            }).catch((error) => {
+                console.error('Error:', error);
+                alert('Registration failed!');
+            });
+        }
+    </script>
 </head>
 <body>
     <h1>Register New Account</h1>
-    <form th:action="@{/api/users/register}" method="post">
+    <form onsubmit="submitForm(event)">
         <div>
             <label for="phoneNumber">Phone Number:</label>
             <input type="text" id="phoneNumber" name="phoneNumber" required>
