@@ -4,6 +4,60 @@
     <meta charset="UTF-8">
     <title>Register | YouBike Rental</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <style>
+        h1 {
+            text-align: left;
+            padding: 10px;
+            border: 2px solid #F39C12; /* 方框 */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 陰影 */
+            background-color: yellow;
+            display: inline-block; /* 使方框適應內容 */
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        div {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
     <script>
         function submitForm(event) {
             event.preventDefault(); // 阻止表單的預設提交行為
@@ -37,14 +91,15 @@
     </script>
 </head>
 <body>
-    <h1>Register New Account</h1>
+    <h1>歡迎來到Youbike系統<br>請輸入以下資料</h1> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <br><br><br>
     <form onsubmit="submitForm(event)">
         <div>
-            <label for="phoneNumber">Phone Number:</label>
+            <label for="phoneNumber">手機號碼:</label>
             <input type="text" id="phoneNumber" name="phoneNumber" required>
         </div>
         <div>
-            <label for="password">Password:</label>
+            <label for="password">密碼:</label>
             <input type="password" id="password" name="password" required>
         </div>
         <div>
@@ -52,15 +107,18 @@
             <input type="email" id="email" name="email" required>
         </div>
         <div>
-            <label for="nationalId">National ID:</label>
+            <label for="nationalId">身分證字號:</label>
             <input type="text" id="nationalId" name="nationalId" required>
         </div>
         <div>
-            <label for="easycardNumber">EasyCard Number:</label>
+            <label for="easycardNumber">悠遊卡號:</label>
             <input type="text" id="easycardNumber" name="easycardNumber">
         </div>
         <div>
-            <button type="submit">Register</button>
+            <button type="submit">註冊</button>
+        </div>
+        <div>
+            <a th:href="@{/login}">立即登入</a>
         </div>
     </form>
 </body>

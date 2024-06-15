@@ -18,12 +18,17 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())  // 使用新方式來禁用CSRF保護
             .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers("/", "/home", "/register", "/api/users/register").permitAll()  // 確保註冊API不需要認證
+            	    .requestMatchers("/", "/home", "/register", "/api/users/register","/login","/UserLogin","/AfterLogin","/Charges1","/images/**").permitAll()  // 確保註冊API不需要認證
             	    .anyRequest().authenticated())
-            //.formLogin(form -> form
-            //    .loginPage("/login")
-            //    .permitAll())
-            .logout().disable();
+            /* .formLogin(form -> form
+                .loginPage("/login")
+                .permitAll())*/
+                .formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .defaultSuccessUrl("/AfterLogin", true) // 登录成功后的默认重定向页面
+                .failureUrl("/login?error=true"); // 登录失败后的重定向页面，并附带错误参数
+            //.logout().disable();
         return http.build();
     }
 

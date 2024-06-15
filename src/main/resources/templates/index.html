@@ -2,11 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to YouBike Rental</title>
+    <title>Ubike系統實作</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <style>
+        body{
+            text-align: center  ;
+        }
+    </style>
 </head>
 <body>
     <header>
+        <br>
+	    <p align = "center">
+            <font color = "blue", size = "75">
+                <b>Welcome to YouBike Rental System</b>
+            </font>
+        </p>
+        <br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="">
+                <font size = "20", color = "red"><b>使用說明</b></font>
+        </a>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a th:href="@{/Charges1}">
+            <font size = "20", color = "red"><b>收費標準</b></font>
+        </a>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="">
+            <font size = "20", color = "red"><b>站點資訊</b></font>
+        </a>
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a th:href="@{/UserLogin}">
+            <font size = "10", color = "red"><b>會員登入</b></font>
+        </a>
+        <br><br>
+
+        <img 
+            src = "https://today-obs.line-scdn.net/0hLp4gsPgDE18JHjvKxXpsCDNIEDA6cgBcbShCXEpwTWtweVdbNXpeMSofGWl0flQBZy9aPSgYCG52LQBdPHte/w1200"
+            alt = "The pattern tell you the steps of renting a bike"   
+        />    
+        
+
+        
         <nav>
             <ul>
                 <li><a th:href="@{/login}">Login</a></li>
@@ -15,11 +61,12 @@
                 <li><a th:href="@{/rent}">Rent a Bike</a></li>
                 <li><a th:href="@{/return}">Return a Bike</a></li>
                 <li><a th:href="@{/contact}">Contact</a></li>
+                <li> <a th:href="@{/UserLogin}">UserLogin</li>
             </ul>
         </nav>
+    
     </header>
     <main>
-        <h1>Welcome to YouBike Rental System</h1>
         <p>This is your go-to platform for renting and managing your bikes conveniently.</p>
         <p>Browse stations, check bike availability, manage your rentals and more.</p>
     </main>

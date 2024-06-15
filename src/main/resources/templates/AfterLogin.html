@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>YouBike Rental System</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button {
+            width: 200px;
+            padding: 15px;
+            margin: 10px;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .balance-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>YouBike Rental System</h1>
+    <div class="button-container">
+        <button class="button" onclick="displayEasyCardBalance()">悠遊卡餘額顯示</button>
+        <button class="button" onclick="queryStationInfo()">查詢站點資訊</button>
+        <button class="button" onclick="rentBike()">租車</button>
+        <button class="button" onclick="returnBike()">還車</button>
+    </div>
+
+    <div class="balance-container">
+        <p id="balance-display">悠遊卡餘額顯示</p>
+        <input type="text" id="cardNumber" placeholder="輸入卡號">
+        <input type="number" id="balance" placeholder="輸入新的餘額">
+        <button onclick="updateEasyCardBalance()">更新餘額</button>
+    </div>
+
+    <script>
+        function displayEasyCardBalance() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            if (!cardNumber) {
+                alert('請輸入卡號');
+                return;
+            }
+
+            fetch(`/api/easycards/byCardNumber/${cardNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.balance !== undefined) {
+                        document.getElementById('balance-display').innerText = `卡號: ${data.cardNumber}, 餘額: ${data.balance}`;
+                    } else {
+                        alert('找不到該卡號');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('查詢失敗');
+                });
+        }
+
+        function updateEasyCardBalance() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const newBalance = document.getElementById('balance').value;
+
+            if (!cardNumber || !newBalance) {
+                alert('請輸入卡號和新的餘額');
+                return;
+            }
+
+            fetch(`/api/easycards/byCardNumber/${cardNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.id !== undefined) {
+                        const easyCard = {
+                            id: data.id,
+                            cardNumber: data.cardNumber,
+                            balance: parseInt(newBalance),
+                            transactionHistory: data.transactionHistory
+                        };
+
+                        fetch(`/api/easycards/${data.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(easyCard)
+                        })
+                            .then(response => response.json())
+                            .then(updatedData => {
+                                document.getElementById('balance-display').innerText = `卡號: ${updatedData.cardNumber}, 新餘額: ${updatedData.balance}`;
+                                alert('餘額更新成功');
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('更新失敗');
+                            });
+                    } else {
+                        alert('找不到該卡號');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('查詢失敗');
+                });
+        }
+
+        function queryStationInfo() {
+            alert('查詢站點資訊功能尚未實現');
+        }
+
+        function rentBike() {
+            alert('租車功能尚未實現');
+        }
+
+        function returnBike() {
+            alert('還車功能尚未實現');
+        }
+    </script>
+</body>
+</html>

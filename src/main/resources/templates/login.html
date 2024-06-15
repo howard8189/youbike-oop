@@ -4,11 +4,104 @@
     <meta charset="UTF-8">
     <title>Login | YouBike Rental</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center; /* 將文字置中 */
+            padding: 10px;
+            border: 2px solid #007BFF; /* 方框 */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 陰影 */
+            background-color: #fff;
+            display: inline-block; /* 使方框適應內容 */
+            margin-bottom: 20px; /* 與表單間距 */
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        div {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        p {
+            text-align: center;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+            const formData = new URLSearchParams();
+            formData.append('phoneNumber', document.getElementById('phoneNumber').value);
+            formData.append('password', document.getElementById('password').value);
+
+            fetch('/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            }).then(response => {
+                if (response.ok) { // 检查响应的状态码
+                    window.location.href = '/AfterLogin'; // 成功后跳转到AfterLogin页面
+                } else {
+                    alert('Login failed'); // 如果状态码不是 2xx，提示登录失败
+                }
+            }).catch(error => {
+                console.error('Error:', error); // 捕捉任何错误并在控制台中打印
+                alert('Login failed'); // 提示登录失败
+            });
+        }
+    </script>
 </head>
 <body>
     <h1>Login to Your Account</h1>
-    <form th:action="@{/api/users/login}" method="post">
-        <div>
+    <form onsubmit="submitForm(event)">
+        <div>  
             <label for="phoneNumber">Phone Number:</label>
             <input type="text" id="phoneNumber" name="phoneNumber" required>
         </div>

@@ -34,6 +34,9 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<User> loginUser(@RequestParam String phoneNumber, @RequestParam String password) {
         User user = userService.loginUser(phoneNumber, password);
-        return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.status(401).build(); // 返回401 Unauthorized状态码
     }
 }
