@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rental Map | YouBike Rental</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Find a YouBike Near You</h1>
+    <div id="map"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var map = L.map('map').setView([25.0330, 121.5654], 13); // Default to Taipei City
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 18
+            }).addTo(map);
+
+            // Example YouBike stations
+            var stations = [
+                {lat: 25.034, lng: 121.564, name: "Station 1"},
+                {lat: 25.037, lng: 121.565, name: "Station 2"},
+                {lat: 25.032, lng: 121.563, name: "Station 3"}
+            ];
+
+            stations.forEach(function(station) {
+                var marker = L.marker([station.lat, station.lng]).addTo(map);
+                marker.bindPopup(station.name);
+            });
+
+            function onLocationFound(e) {
+                var radius = e.accuracy / 2;
+                L.marker(e.latlng).addTo(map)
+                    .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+                L.circle(e.latlng, radius).addTo(map);
+
+                // Calculate distance to each station and update popup
+                stations.forEach(function(station) {
+                    var distance = map.distance(e.latlng, [station.lat, station.lng]);
+                    var stationMarker = L.marker([station.lat, station.lng]).addTo(map);
+                    stationMarker.bindPopup(station.name + " - " + (distance / 1000).toFixed(2) + " km away").openPopup();
+                });
+            }
+
+            function onLocationError(e) {
+                alert("Error finding location: " + e.message);
+            }
+
+            map.on('locationfound', onLocationFound);
+            map.on('locationerror', onLocationError);
+
+            map.locate({setView: true, maxZoom: 16});
+        });
+    </script>
+</body>
+</html>

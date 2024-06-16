@@ -36,5 +36,21 @@ public class MainController {
     public String getAfterLoginForm() {
         return "AfterLogin";
     }
+    @GetMapping("/Map")
+    public String getMapForm() {
+        return "Map";
+    }
+    @GetMapping("/UserInformation")
+    public String getUserInformationForm() {
+        return "UserInformation";
+    }
+    @GetMapping("/returnbike")
+    public String getreturnbikeForm(){
+        return "returnbike";
+    }
+    @GetMapping("/rentbike")
+    public String getrentbikeForm(){
+        return "rentbike";
+    }
     
 }

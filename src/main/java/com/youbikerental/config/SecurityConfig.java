@@ -18,7 +18,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())  // 使用新方式來禁用CSRF保護
             .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers("/", "/home", "/register", "/api/users/register","/login","/UserLogin","/AfterLogin","/Charges1","/images/**").permitAll()  // 確保註冊API不需要認證
+            	    .requestMatchers("/", "/home", "/register", "/** ","/api/users/register","/rentbike","/login","/returnbike","/UserLogin","/UserInformation","/AfterLogin","/Map","/Charges1","/images/**").permitAll()  // 確保註冊API不需要認證
             	    .anyRequest().authenticated())
             /* .formLogin(form -> form
                 .loginPage("/login")

@@ -2,29 +2,15 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>YouBike 收費計算器</title>
+    <title>YouBike 租車</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            text-align: center;
         }
         .container {
             max-width: 600px;
             margin: 0 auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            border: 1px solid #d4d4d4;
-            text-align: center;
-            padding: 8px;
-        }
-        th {
-            background-color: #f4f4f4;
         }
         .form-group {
             margin-bottom: 15px;
@@ -53,20 +39,31 @@
             font-weight: bold;
             margin-top: 20px;
         }
+        .note {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .time-display {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>YouBike 收費計算器</h1>
+        <h1>YouBike 租車</h1>
+        <div class="time-display" id="current-time">當前時間：</div>
         <div class="form-group">
-            <label for="version" align = "left">選擇版本:</label>
+            <label for="version">選擇版本:</label>
             <select id="version">
                 <option value="2.0">YouBike 2.0</option>
                 <option value="2.0E">YouBike 2.0E</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="region" align = "left">借車區域:</label>
+            <label for="region">借車區域:</label>
             <select id="region">
                 <option value="台北市">台北市</option>
                 <option value="新北市">新北市</option>
@@ -83,11 +80,14 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="time" align = "left">使用時間 (分鐘):</label>
-            <input type="number" id="time" min="0">
+            <label for="return-time">預計還車時間 (24小時制):</label>
+            <input type="time" id="return-time" required>
         </div>
-        <button onclick="calculateFee()">計算費用</button>
+        <button onclick="calculateFee()">產生預估費用</button>
         <div id="result" class="result"></div>
+        <button onclick="confirmRental()">確認租車</button>
+        <div id="confirmation" class="result"></div>
+        <div class="note">您將租的是最近的Youbike站點</div>
     </div>
 
     <script>
@@ -110,7 +110,7 @@
                 "桃園市": [20, 20, 40],
                 "新竹縣": [20, 20, 40],
                 "新竹市": [20, 20, 40],
-		"新竹科學園區": [20, 20, 40],
+                "新竹科學園區": [20, 20, 40],
                 "苗栗縣": [10, 20, 40],
                 "臺中市": [10, 20, 40],
                 "嘉義市": [10, 20, 40],
@@ -120,54 +120,78 @@
             }
         };
 
+        function updateCurrentTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            document.getElementById('current-time').innerText = `當前時間：${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        setInterval(updateCurrentTime, 1000);
+
         function calculateFee() {
             const version = document.getElementById("version").value;
             const region = document.getElementById("region").value;
-            const time = parseInt(document.getElementById("time").value);
-            let fee = 0;
+            const returnTime = document.getElementById("return-time").value;
 
-            if (isNaN(time) || time <= 0) {
-                document.getElementById("result").innerText = "請輸入有效的時間。";
+            if (version === "2.0E" && (region === "台北市" || region === "新北市")) {
+                document.getElementById("result").innerText = "此地區不支援租借 2.0E 版本。";
                 return;
             }
 
+            const currentTime = new Date();
+            const currentHours = currentTime.getHours();
+            const currentMinutes = currentTime.getMinutes();
+
+            const [returnHours, returnMinutes] = returnTime.split(':').map(Number);
+            const rentalTimeMinutes = (returnHours * 60 + returnMinutes) - (currentHours * 60 + currentMinutes);
+
+            if (rentalTimeMinutes <= 0) {
+                document.getElementById("result").innerText = "請輸入有效的還車時間。";
+                return;
+            }
+
+            let fee = 0;
             const rate = rates[version][region];
 
             if (version === "2.0") {
-                if (time <= 30) {
+                if (rentalTimeMinutes <= 30) {
                     fee = rate[0];
-                } else if (time <= 60) {
+                } else if (rentalTimeMinutes <= 60) {
                     fee = rate[1];
-                } else if (time <= 240) {
-                    fee = rate[1] + Math.ceil((time - 60) / 30) * rate[2];
-                } else if (time <= 480) {
-                    fee = rate[1] + 6 * rate[2] + Math.ceil((time - 240) / 30) * rate[3];
+                } else if (rentalTimeMinutes <= 240) {
+                    fee = rate[1] + Math.ceil((rentalTimeMinutes - 60) / 30) * rate[2];
+                } else if (rentalTimeMinutes <= 480) {
+                    fee = rate[1] + 6 * rate[2] + Math.ceil((rentalTimeMinutes - 240) / 30) * rate[3];
                 } else {
-                    fee = rate[1] + 6 * rate[2] + 8 * rate[3] + Math.ceil((time - 480) / 30) * rate[4];
+                    fee = rate[1] + 6 * rate[2] + 8 * rate[3] + Math.ceil((rentalTimeMinutes - 480) / 30) * rate[4];
                 }
             } else if (version === "2.0E") {
-                if (time <= 30) {
+                if (rentalTimeMinutes <= 30) {
                     fee = rate[0];
-                } else if (time <= 120) {
-                    fee = rate[0] + Math.ceil((time - 30) / 30) * rate[1];
+                } else if (rentalTimeMinutes <= 120) {
+                    fee = rate[0] + Math.ceil((rentalTimeMinutes - 30) / 30) * rate[1];
                 } else {
-                    fee = rate[0] + 3 * rate[1] + Math.ceil((time - 120) / 30) * rate[2];
+                    fee = rate[0] + 3 * rate[1] + Math.ceil((rentalTimeMinutes - 120) / 30) * rate[2];
                 }
             }
 
-            document.getElementById("result").innerText = `總費用：${fee} 新台幣`;
-
-            // Clear input for next calculation
-            document.getElementById("time").value = '';
+            document.getElementById("result").innerText = `預估費用：${fee} 新台幣`;
         }
+
+        function confirmRental() {
+            const version = document.getElementById("version").value;
+            const region = document.getElementById("region").value;
+            const returnTime = document.getElementById("return-time").value;
+            const currentTime = new Date();
+            const currentHours = currentTime.getHours();
+            const currentMinutes = currentTime.getMinutes();
+
+            document.getElementById("confirmation").innerText = `您已確認租借 ${version} 版本，借車區域：${region}，現在時間：${currentHours}:${currentMinutes < 10 ? '0' : ''}${currentMinutes}，預計還車時間：${returnTime}。`;
+        }
+
+        updateCurrentTime();
     </script>
-
-    <img 
-        src = "images/ubike2.png"
-        alt = "The pattern tell you the steps of renting a bike"
-        width="800"
-        height="400" 
-    />  
-
 </body>
 </html>
