@@ -8,6 +8,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.config.http.SessionCreationPolicy;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -35,16 +39,25 @@ public class SecurityConfig {
 
         // Enable session management
         http.sessionManagement(session -> session
-            .sessionFixation(sessionFixation -> sessionFixation.migrateSession())
+            .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // Ensure a session is always created
             .invalidSessionUrl("/login")
+            .sessionFixation().migrateSession()
             .maximumSessions(1)
+            .maxSessionsPreventsLogin(true)
             .expiredUrl("/login"));
 
         return http.build();
+    }
+    
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(DataSource dataSource) {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    }    
 }

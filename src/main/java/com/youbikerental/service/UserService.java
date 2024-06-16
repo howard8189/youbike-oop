@@ -5,10 +5,16 @@ import com.youbikerental.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.util.Collections;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 @Service // Marks this class as a Spring service
 public class UserService {
@@ -21,6 +27,16 @@ public class UserService {
 
     @Autowired // Automatically injects PasswordEncoder instance
     private PasswordEncoder passwordEncoder;
+    
+    @Override
+    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+        User user = userRepository.findByPhoneNumber(phoneNumber);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with phone number: " + phoneNumber);
+        }
+        return new org.springframework.security.core.userdetails.User(user.getPhoneNumber(), user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+    }
 
     // Register a new user with encrypted password
     public User registerUser(User newUser) {
