@@ -28,7 +28,7 @@ public class UserService {
     @Autowired // Automatically injects PasswordEncoder instance
     private PasswordEncoder passwordEncoder;
     
-    @Override
+    //@Override
     public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
         User user = userRepository.findByPhoneNumber(phoneNumber);
         if (user == null) {

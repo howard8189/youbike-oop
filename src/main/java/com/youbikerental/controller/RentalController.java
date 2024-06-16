@@ -1,6 +1,7 @@
 package com.youbikerental.controller;
 
 import com.youbikerental.model.Rental;
+import com.youbikerental.model.RentalRequest;
 import com.youbikerental.service.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,11 @@ public class RentalController {
     private RentalService rentalService;
 
     // Create a new rental
+
+    @GetMapping("/rental")
+    public String showRentalPage() {
+        return "rental";  // 這裡返回的是Thymeleaf模板的名稱，不需要包含 .html 擴展名
+    }
     @PostMapping // Maps HTTP POST requests onto this method
     public ResponseEntity<Rental> createRental(@RequestBody Rental rental) {
         Rental newRental = rentalService.createRental(rental);
@@ -47,5 +53,17 @@ public class RentalController {
     public ResponseEntity<Void> deleteRental(@PathVariable Long id) {
         rentalService.deleteRental(id);
         return ResponseEntity.ok().build(); // Returns 200 OK on successful deletion
+    }
+
+    @PostMapping("/calculate-fee")
+    public ResponseEntity<Double> calculateFee(@RequestBody RentalRequest rentalRequest) {
+        double fee = rentalService.calculateFee(rentalRequest);
+        return ResponseEntity.ok(Double.valueOf(fee));
+    }
+
+    @PostMapping("/confirm-rental")
+    public ResponseEntity<String> confirmRental(@RequestBody RentalRequest rentalRequest) {
+        String message = rentalService.confirmRental(rentalRequest);
+        return ResponseEntity.ok(message);
     }
 }

@@ -26,6 +26,11 @@ public class MainController {
     public String showRegisterForm() {
         return "register";
     }
+
+    @GetMapping("/map")
+    public String showMapForm() {
+        return "map";
+    }
     
     // 使用者登入後導向，假設簡化處理：所有已認證的用戶都跳轉至此
     @GetMapping("/userlogin")
@@ -55,5 +60,45 @@ public class MainController {
     @GetMapping("/maintenance/edit")
     public String maintenanceEdit() {
         return "medit";
+    }
+    
+
+    @GetMapping("/userdashboard")
+    public String userdashboardlogin() {
+        return "userdashboard";
+    }
+    
+    @GetMapping("/UserLogin")
+    public String showUserLoginForm() {
+        return "UserLogin";
+    }
+    @GetMapping("/Charges1")
+    public String getCharges1Form() {
+        return "Charges1";
+    }
+    @GetMapping("/AfterLogin")
+    public String getAfterLoginForm() {
+        return "AfterLogin";
+    }
+    @GetMapping("/Map")
+    public String getMapForm() {
+        return "Map";
+    }
+    @GetMapping("/UserInformation")
+    public String getUserInformationForm() {
+        return "UserInformation";
+    }
+    @GetMapping("/returnbike")
+    public String getreturnbikeForm(){
+        return "returnbike";
+    }
+    @GetMapping("/rentbike")
+    public String getrentbikeForm(){
+        return "rentbike";
+    }
+
+    @GetMapping("/rental")
+    public String getrentalForm(){
+        return "rental";
     }
 }

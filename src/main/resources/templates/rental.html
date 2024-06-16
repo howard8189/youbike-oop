@@ -1,66 +1,201 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Rental Map | YouBike Rental</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <title>YouBike 租車</title>
     <style>
-        #map {
-            height: 600px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
             width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .note {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .time-display {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <h1>Find a YouBike Near You</h1>
-    <div id="map"></div>
+    <div class="container">
+        <h1>YouBike 租車</h1>
+        <div class="time-display" id="current-time">當前時間：</div>
+        <div class="form-group">
+            <label for="version">選擇版本:</label>
+            <select id="version">
+                <option value="2.0">YouBike 2.0</option>
+                <option value="2.0E">YouBike 2.0E</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="region">借車區域:</label>
+            <select id="region">
+                <!-- 這裡的選項可以通過控制器來填充 -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="return-time">預計還車時間 (24小時制):</label>
+            <input type="time" id="return-time" required>
+        </div>
+        <button onclick="calculateFee()">產生預估費用</button>
+        <div id="result" class="result"></div>
+        <button onclick="confirmRental()">確認租車</button>
+        <div id="confirmation" class="result"></div>
+        <div class="note">您將租的是最近的Youbike站點</div>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var map = L.map('map').setView([25.0330, 121.5654], 13); // Default to Taipei City
+        const rates = {
+            "2.0": {
+                "台北市": [0, 10, 10, 20, 40],
+                "新北市": [5, 10, 10, 20, 40],
+                "桃園市": [0, 0, 10, 20, 40],
+                "新竹縣": [10, 10, 10, 20, 40],
+                "新竹市": [10, 10, 10, 20, 40],
+                "新竹科學園區": [10, 10, 10, 20, 40],
+                "苗栗縣": [0, 10, 10, 20, 40],
+                "臺中市": [0, 10, 10, 20, 40],
+                "嘉義市": [0, 10, 10, 20, 40],
+                "臺南市": [10, 10, 10, 20, 40],
+                "高雄市": [5, 10, 10, 20, 40],
+                "屏東縣": [0, 10, 10, 20, 40]
+            },
+            "2.0E": {
+                "桃園市": [20, 20, 40],
+                "新竹縣": [20, 20, 40],
+                "新竹市": [20, 20, 40],
+                "新竹科學園區": [20, 20, 40],
+                "苗栗縣": [10, 20, 40],
+                "臺中市": [10, 20, 40],
+                "嘉義市": [10, 20, 40],
+                "臺南市": [20, 20, 40],
+                "高雄市": [10, 20, 40],
+                "屏東縣": [10, 20, 40]
+            }
+        };
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                maxZoom: 18
-            }).addTo(map);
+        function updateCurrentTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            document.getElementById('current-time').innerText = `當前時間：${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
 
-            // Example YouBike stations
-            var stations = [
-                {lat: 25.034, lng: 121.564, name: "Station 1"},
-                {lat: 25.037, lng: 121.565, name: "Station 2"},
-                {lat: 25.032, lng: 121.563, name: "Station 3"}
-            ];
+        setInterval(updateCurrentTime, 1000);
 
-            stations.forEach(function(station) {
-                var marker = L.marker([station.lat, station.lng]).addTo(map);
-                marker.bindPopup(station.name);
-            });
+        function calculateFee() {
+            const version = document.getElementById("version").value;
+            const region = document.getElementById("region").value;
+            const returnTime = document.getElementById("return-time").value;
 
-            function onLocationFound(e) {
-                var radius = e.accuracy / 2;
-                L.marker(e.latlng).addTo(map)
-                    .bindPopup("You are within " + radius + " meters from this point").openPopup();
+            if (version === "2.0E" && (region === "台北市" || region === "新北市")) {
+                document.getElementById("result").innerText = "此地區不支援租借 2.0E 版本。";
+                return;
+            }
 
-                L.circle(e.latlng, radius).addTo(map);
+            const currentTime = new Date();
+            const currentHours = currentTime.getHours();
+            const currentMinutes = currentTime.getMinutes();
 
-                // Calculate distance to each station and update popup
-                stations.forEach(function(station) {
-                    var distance = map.distance(e.latlng, [station.lat, station.lng]);
-                    var stationMarker = L.marker([station.lat, station.lng]).addTo(map);
-                    stationMarker.bindPopup(station.name + " - " + (distance / 1000).toFixed(2) + " km away").openPopup();
+            const [returnHours, returnMinutes] = returnTime.split(':').map(Number);
+            const rentalTimeMinutes = (returnHours * 60 + returnMinutes) - (currentHours * 60 + currentMinutes);
+
+            if (rentalTimeMinutes <= 0) {
+                document.getElementById("result").innerText = "請輸入有效的還車時間。";
+                return;
+            }
+
+            let fee = 0;
+            const rate = rates[version][region];
+
+            if (version === "2.0") {
+                if (rentalTimeMinutes <= 30) {
+                    fee = rate[0];
+                } else if (rentalTimeMinutes <= 60) {
+                    fee = rate[1];
+                } else if (rentalTimeMinutes <= 240) {
+                    fee = rate[1] + Math.ceil((rentalTimeMinutes - 60) / 30) * rate[2];
+                } else if (rentalTimeMinutes <= 480) {
+                    fee = rate[1] + 6 * rate[2] + Math.ceil((rentalTimeMinutes - 240) / 30) * rate[3];
+                } else {
+                    fee = rate[1] + 6 * rate[2] + 8 * rate[3] + Math.ceil((rentalTimeMinutes - 480) / 30) * rate[4];
+                }
+            } else if (version === "2.0E") {
+                if (rentalTimeMinutes <= 30) {
+                    fee = rate[0];
+                } else if (rentalTimeMinutes <= 120) {
+                    fee = rate[0] + Math.ceil((rentalTimeMinutes - 30) / 30) * rate[1];
+                } else {
+                    fee = rate[0] + 3 * rate[1] + Math.ceil((rentalTimeMinutes - 120) / 30) * rate[2];
+                }
+            }
+
+            document.getElementById("result").innerText = `預估費用：${fee} 新台幣`;
+        }
+
+        function confirmRental() {
+            const version = document.getElementById("version").value;
+            const region = document.getElementById("region").value;
+            const returnTime = document.getElementById("return-time").value;
+            const currentTime = new Date();
+            const currentHours = currentTime.getHours();
+            const currentMinutes = currentTime.getMinutes();
+
+            document.getElementById("confirmation").innerText = `您已確認租借 ${version} 版本，借車區域：${region}，現在時間：${currentHours}:${currentMinutes < 10 ? '0' : ''}${currentMinutes}，預計還車時間：${returnTime}。`;
+        }
+
+        function loadRegions() {
+            fetch('/api/stations')
+                .then(response => response.json())
+                .then(data => {
+                    const regionSelect = document.getElementById('region');
+                    data.forEach(station => {
+                        const option = document.createElement('option');
+                        option.value = station.region;
+                        option.text = station.region;
+                        regionSelect.appendChild(option);
+                    });
                 });
-            }
+        }
 
-            function onLocationError(e) {
-                alert("Error finding location: " + e.message);
-            }
-
-            map.on('locationfound', onLocationFound);
-            map.on('locationerror', onLocationError);
-
-            map.locate({setView: true, maxZoom: 16});
-        });
+        window.onload = loadRegions;
+        updateCurrentTime();
     </script>
 </body>
 </html>

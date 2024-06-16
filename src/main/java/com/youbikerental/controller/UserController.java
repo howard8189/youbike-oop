@@ -40,7 +40,7 @@ public class UserController {
             if ("1111111111".equals(phoneNumber) || "ubikeadmin123".equals(phoneNumber)) {
                 return "redirect:/maintenance";
             } else {
-                return "redirect:/userlogin";
+                return "redirect:/AfterLogin";
             }
         } else {
             return "redirect:/login?error=true";  // Redirect to login page on failure

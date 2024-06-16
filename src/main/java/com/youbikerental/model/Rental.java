@@ -7,9 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import java.time.LocalDateTime;
-//import jakarta.persistence.Basic;
-//import jakarta.persistence.Temporal;
-//import jakarta.persistence.TemporalType;
 
 @Entity // This annotation marks the class as a JPA entity.
 @Table(name = "rentals") // Specifies the table in the database with which this entity is mapped.
@@ -40,14 +37,20 @@ public class Rental {
     private LocalDateTime returnTime;
 
     @Column(name = "additional_fee")
-    private int additionalFee;
+    private double additionalFee;
 
     @Column(name = "amount")
-    private int amount;
+    private double amount;
+
+    @Column(name = "version")
+    private String version;
+
+    @Column(name = "region")
+    private String region;
 
     public Rental() {}
 
-    public Rental(String userId, String easycardNumber, String bikenumber, String rentStation, LocalDateTime rentTime, String returnStation, LocalDateTime returnTime, int additionalFee, int amount) {
+    public Rental(String userId, String easycardNumber, String bikenumber, String rentStation, LocalDateTime rentTime, String returnStation, LocalDateTime returnTime, double additionalFee, double amount, String version, String region) {
         this.userId = userId;
         this.easycardNumber = easycardNumber;
         this.bikenumber = bikenumber;
@@ -57,6 +60,8 @@ public class Rental {
         this.returnTime = returnTime;
         this.additionalFee = additionalFee;
         this.amount = amount;
+        this.version = version;
+        this.region = region;
     }
 
     // Getters and Setters
@@ -125,19 +130,35 @@ public class Rental {
         this.returnTime = returnTime;
     }
 
-    public int getAdditionalFee() {
+    public double getAdditionalFee() {
         return additionalFee;
     }
 
-    public void setAdditionalFee(int additionalFee) {
+    public void setAdditionalFee(double additionalFee) {
         this.additionalFee = additionalFee;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }
