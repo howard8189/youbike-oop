@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service // Marks this class as a Spring service
 public class BikeService {
@@ -27,6 +28,13 @@ public class BikeService {
         Optional<Bike> bike = bikeRepository.findById(id);
         return bike.orElse(null); // Returns the bike if found, or null otherwise
     }
+    
+    public List<Bike> getCrossAreaBikes() {
+        return bikeRepository.findAll().stream()
+                .filter(bike -> !bike.getArea().equals(bike.getLocation()))
+                .collect(Collectors.toList());
+    }
+
 
     // Update bike information based on ID
     public Bike updateBike(Long id, Bike updatedBike) {
@@ -45,5 +53,21 @@ public class BikeService {
     // Delete a bike by its ID
     public void deleteBike(Long id) {
         bikeRepository.deleteById(id); // Deletes the bike by ID from the database
+    }
+    
+    public Bike getBikeByNumber(String bikeNumber) {
+        return bikeRepository.findByBikeNumber(bikeNumber).orElse(null);
+    }
+
+    
+
+    // Delete a bike by its bike number
+    public boolean deleteBikeByNumber(String bikeNumber) {
+        Optional<Bike> bike = bikeRepository.findByBikeNumber(bikeNumber);
+        if (bike.isPresent()) {
+            bikeRepository.delete(bike.get());
+            return true;
+        }
+        return false;
     }
 }

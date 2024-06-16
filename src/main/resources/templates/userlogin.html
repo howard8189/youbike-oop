@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"></html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入/註冊</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* 調整按鈕之間的間距 */
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #007bff; /* 按鈕背景色 */
+            color: #fff; /* 按鈕文字顏色 */
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3; /* 滑鼠懸停時的背景色 */
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <a th:href="@{/login}" class="button">登入</a>
+        <a th:href="@{/register}" class="button">註冊</a>
+    </div>
+</body>
+</html>

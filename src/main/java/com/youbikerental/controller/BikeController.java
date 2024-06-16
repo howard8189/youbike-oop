@@ -5,6 +5,7 @@ import com.youbikerental.service.BikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 
 import java.util.List;
 
@@ -15,11 +16,12 @@ public class BikeController {
     private BikeService bikeService;
 
     // Add a new bike
-    @PostMapping // Maps HTTP POST requests onto this method
+    @PostMapping("/add") // Maps HTTP POST requests onto this method for adding a bike
     public ResponseEntity<Bike> addBike(@RequestBody Bike bike) {
         Bike newBike = bikeService.addBike(bike);
         return ResponseEntity.ok(newBike); // Returns the newly added bike with 200 OK
     }
+
 
     // Get all bikes
     @GetMapping // Maps HTTP GET requests onto this method
@@ -35,17 +37,62 @@ public class BikeController {
         return bike != null ? ResponseEntity.ok(bike) : ResponseEntity.notFound().build(); // Returns the found bike or 404 Not Found
     }
 
-    // Update bike information
-    @PutMapping("/{id}") // Maps HTTP PUT requests onto this method
-    public ResponseEntity<Bike> updateBike(@PathVariable Long id, @RequestBody Bike bike) {
-        Bike updatedBike = bikeService.updateBike(id, bike);
-        return updatedBike != null ? ResponseEntity.ok(updatedBike) : ResponseEntity.notFound().build(); // Returns the updated bike or 404 Not Found
+    @GetMapping("/search/{bikeNumber}")
+    public ResponseEntity<Bike> getBikeByNumber(@PathVariable String bikeNumber) {
+        Bike bike = bikeService.getBikeByNumber(bikeNumber);
+        if (bike != null) {
+            return ResponseEntity.ok(bike);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
+
+    
+    @PostMapping("/api/bikes/search")
+    public String searchBike(@RequestParam("bikeNumber") String bikeNumber, Model model) {
+        Bike bike = bikeService.getBikeByNumber(bikeNumber);
+        model.addAttribute("bike", bike);
+        return "msearch"; // Assume the template name is 'msearch.html'
+    }
+
+    
+    @PostMapping("/update")
+    public ResponseEntity<Bike> updateBike(@RequestBody Bike bike) {
+        if (bike.getId() == null) {
+            return ResponseEntity.badRequest().body(null); // 返回 400 錯誤，因為沒有ID
+        }
+        Bike existingBike = bikeService.getBikeById(bike.getId());
+        if (existingBike == null) {
+            return ResponseEntity.notFound().build(); // 沒有找到對應的車輛，返回 404
+        }
+
+        // 更新現有車輛資料
+        existingBike.setBikeType(bike.getBikeType());
+        existingBike.setArea(bike.getArea());
+        existingBike.setStatus(bike.getStatus());
+        existingBike.setLocation(bike.getLocation());
+        existingBike.setRepairInfo(bike.getRepairInfo());
+        Bike updatedBike = bikeService.updateBike(existingBike.getId(), existingBike);
+        return ResponseEntity.ok(updatedBike); // 成功更新，返回更新後的對象
+    }
+    
+    @GetMapping("/cross-area")
+    public ResponseEntity<List<Bike>> getCrossAreaBikes() {
+        List<Bike> bikes = bikeService.getCrossAreaBikes();
+        return ResponseEntity.ok(bikes);
+    }
+
+
+    
     // Delete a bike
-    @DeleteMapping("/{id}") // Maps HTTP DELETE requests onto this method
-    public ResponseEntity<Void> deleteBike(@PathVariable Long id) {
-        bikeService.deleteBike(id);
-        return ResponseEntity.ok().build(); // Returns 200 OK on successful deletion
+    @DeleteMapping("/delete/{bikeNumber}") // 修改成根據車號刪除
+    public ResponseEntity<Void> deleteBikeByNumber(@PathVariable String bikeNumber) {
+        boolean deleted = bikeService.deleteBikeByNumber(bikeNumber);
+        if (deleted) {
+            return ResponseEntity.ok().build(); // Returns 200 OK on successful deletion
+        } else {
+            return ResponseEntity.notFound().build(); // Returns 404 if the bike number is not found
+        }
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -30,10 +31,19 @@ public class UserController {
         List<User> users = userRepository.findAll();
         return ResponseEntity.ok(users);
     }
-
+    
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestParam String phoneNumber, @RequestParam String password) {
+    public String loginUser(@RequestParam String phoneNumber, @RequestParam String password, HttpServletRequest request) {
         User user = userService.loginUser(phoneNumber, password);
-        return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
+        if (user != null) {
+            request.getSession().setAttribute("user", user);  // Store user info in session
+            if ("1111111111".equals(phoneNumber) || "ubikeadmin123".equals(phoneNumber)) {
+                return "redirect:/maintenance";
+            } else {
+                return "redirect:/userlogin";
+            }
+        } else {
+            return "redirect:/login?error=true";  // Redirect to login page on failure
+        }
     }
 }

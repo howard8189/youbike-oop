@@ -3,23 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <title>Login | YouBike Rental</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f8f8;
+        }
+        .login-container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .login-container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .login-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .login-container label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .login-container input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .login-container button {
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #ff8000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .login-container button:hover {
+            background-color: #fdd835;
+        }
+        .login-container .register-link {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .login-container .register-link button {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Login to Your Account</h1>
-    <form th:action="@{/api/users/login}" method="post">
-        <div>
-            <label for="phoneNumber">Phone Number:</label>
+    <div class="login-container">
+        <h1>會員登入</h1>
+        <form th:action="@{/api/users/login}" method="post">
+            <label for="phoneNumber">請輸入手機號碼（帳號）:</label>
             <input type="text" id="phoneNumber" name="phoneNumber" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
+            <label for="password">請輸入密碼:</label>
             <input type="password" id="password" name="password" required>
+            <button type="submit">登入</button>
+        </form>
+        <div class="register-link">
+            <p>還沒註冊嗎？</p>
+            <form th:action="@{/register}" method="get">
+                <button type="submit">加入會員</button>
+            </form>
         </div>
-        <div>
-            <button type="submit">Login</button>
-        </div>
-    </form>
-    <p>Don't have an account? <a th:href="@{/register}">Register Here</a></p>
+    </div>
 </body>
 </html>

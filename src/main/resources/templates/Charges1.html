@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | YouBike Rental</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column; /* 垂直排列 */
+            height: 100%; /* 使用整個視窗的高度 */
+        }
+        .header {
+            background-color: #007BFF;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .content {
+            flex: 1; /* 佔剩餘空間 */
+            display: flex;
+            flex-direction: row; /* 水平排列 */
+        }
+        .left-third {
+            flex: 1; /* 佔左側的1/3 */
+            display: flex;
+            flex-direction: column; /* 垂直排列 */
+        }
+        .right-two-thirds {
+            flex: 2; /* 佔右側的2/3 */
+            display: flex;
+            flex-direction: column; /* 垂直排列 */
+        }
+        .top-section {
+            flex: 1; /* 佔上半部的1/2 */
+            background-color: #f0f0f0;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        .bottom-section {
+            flex: 1; /* 佔下半部的1/2 */
+            display: flex;
+            flex-direction: row; /* 水平排列 */
+        }
+        .bottom-left, .bottom-right {
+            flex: 1; /* 左右兩邊各佔1/2 */
+            background-color: #d3d3d3;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+
+        h1{
+            text-align: center;
+            padding: 20px;
+            border: 3px solid #F39C12;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 25px;
+    }
+        h2{
+            text-align: center;
+            padding: 20px;
+            font-size: 20px;
+            background-color: yellow;
+            color :black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class = "container">
+        <div class = "header">
+            <h1>歡迎來到Youbike系統</h1>
+            <h2>以下是收費標準</h2>
+        </div>
+        <div class="content">
+            <div class="left-third">
+                <div class="top-section">
+                    <h2>左上區塊</h2>
+                    <p>這裡是左上區塊的內容。</p>
+                </div>
+                <div class="bottom-section">
+                    <div class="bottom-left">
+                        <h2>左下左區塊</h2>
+                        <p>這裡是左下左區塊的內容。</p>
+                    </div>
+                    <div class="bottom-right">
+                        <h2>左下右區塊</h2>
+                        <p>這裡是左下右區塊的內容。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="right-two-thirds">
+                <div class="top-section">
+                    <h2>右上區塊</h2>
+                    <p>這裡是右上區塊的內容。</p>
+                </div>
+                <div class="bottom-section">
+                    <div class="bottom-left">
+                        <h2>右下左區塊</h2>
+                        <p>這裡是右下左區塊的內容。</p>
+                    </div>
+                    <div class="bottom-right">
+                        <h2>右下右區塊</h2>
+                        <p>這裡是右下右區塊的內容。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</body>

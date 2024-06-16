@@ -1,30 +1,95 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-TW" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to YouBike Rental</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouBike</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        .header img {
+            height: 40px;
+        }
+        .header nav {
+            display: flex;
+            gap: 20px;
+        }
+        .header button {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #333;
+        }
+        .header button:hover {
+            color: #555;
+        }
+        .main-content {
+            padding: 50px;
+            background-color: #fff;
+        }
+        .main-content img {
+            width: 80%;
+            max-width: 1000px;
+        }
+        .main-content h1 {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .main-content p {
+            font-size: 18px;
+            color: #666;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #8bc34a;
+            border: none;
+            border-radius: 20px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #7cb342;
+        }
+    </style>
 </head>
 <body>
-    <header>
+    <div class="header">
+        <img th:src="@{/images/YouBikelogo.png}" alt="YouBike Logo">
         <nav>
-            <ul>
-                <li><a th:href="@{/login}">Login</a></li>
-                <li><a th:href="@{/register}">Register</a></li>
-                <li><a th:href="@{/stations}">Stations</a></li>
-                <li><a th:href="@{/rent}">Rent a Bike</a></li>
-                <li><a th:href="@{/return}">Return a Bike</a></li>
-                <li><a th:href="@{/contact}">Contact</a></li>
-            </ul>
+            <form action="/nearest" method="get">
+                <button type="submit">最近站點</button>
+            </form>
+            <form action="/charge" method="get">
+                <button type="submit">收費規則</button>
+            </form>
+            <form action="/contact" method="get">
+                <button type="submit">聯繫我們</button>
+            </form>
         </nav>
-    </header>
-    <main>
-        <h1>Welcome to YouBike Rental System</h1>
-        <p>This is your go-to platform for renting and managing your bikes conveniently.</p>
-        <p>Browse stations, check bike availability, manage your rentals and more.</p>
-    </main>
-    <footer>
-        <p>&copy; 2024 YouBike Rental, Inc. All rights reserved.</p>
-    </footer>
+        <form action="/login" method="get">
+            <button type="submit" class="btn">開始體驗</button>
+        </form>
+    </div>
+    <div class="main-content">
+        <img th:src="@{/images/112235IA-Y037_L.jpg}" alt="YouBike Cover">
+        <h1>微笑單車租借整合平台</h1>
+        <p>讓你的每一次旅程，都變得更加快捷</p>
+    </div>
 </body>
 </html>

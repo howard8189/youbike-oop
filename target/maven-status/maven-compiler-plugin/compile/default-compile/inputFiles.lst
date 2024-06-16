@@ -6,7 +6,6 @@
 /Users/howardsung/eclipse-workspace/youbike-rental/src/main/java/com/youbikerental/model/User.java
 /Users/howardsung/eclipse-workspace/youbike-rental/src/main/java/com/youbikerental/repository/PostRepository.java
 /Users/howardsung/eclipse-workspace/youbike-rental/src/main/java/com/youbikerental/service/UserService.java
-/Users/howardsung/eclipse-workspace/youbike-rental/src/main/java/com/youbikerental/config/MongoDBConfig.java
 /Users/howardsung/eclipse-workspace/youbike-rental/src/main/java/com/youbikerental/controller/StationController.java
 /Users/howardsung/eclipse-workspace/youbike-rental/src/main/java/com/youbikerental/controller/EasyCardController.java
 /Users/howardsung/eclipse-workspace/youbike-rental/src/main/java/com/youbikerental/service/BikeService.java

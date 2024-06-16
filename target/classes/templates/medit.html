@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Bike Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f8f8f8;
+        }
+        .form-container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-container label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .form-container input,
+        .form-container select {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-container button {
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #ff8000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #e67300;
+        }
+        .delete-container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .delete-container h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .delete-container button {
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #ff0000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-container button:hover {
+            background-color: #e60000;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>新增車輛資訊</h1>
+        <form id="bikeForm">
+            <input type="text" id="bikeNumber" name="bikeNumber" placeholder="車輛編號" required>
+            <select id="bikeType" name="bikeType">
+                <option value="2.0">2.0</option>
+                <option value="2.0E">2.0E</option>
+            </select>
+            <input type="text" id="area" name="area" placeholder="地區" required>
+            <select id="status" name="status">
+                <option value="available">可用</option>
+                <option value="rented">已租借</option>
+                <option value="out_of_service">維修中</option>
+                <option value="lost">遺失</option>
+            </select>
+            <input type="text" id="location" name="location" placeholder="位置" required>
+            <input type="text" id="repairInfo" name="repairInfo" placeholder="維修資訊">
+            <button type="submit">提交</button>
+        </form>
+    </div>
+
+    <div class="delete-container">
+        <h2>刪除車輛</h2>
+        <form id="deleteForm">
+            <input type="text" id="deleteBikeNumber" name="deleteBikeNumber" placeholder="要刪除的車輛編號" required>
+            <button type="button" onclick="deleteBike()">刪除車輛</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('bikeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = {
+                bikeNumber: document.getElementById('bikeNumber').value,
+                bikeType: document.getElementById('bikeType').value,
+                area: document.getElementById('area').value,
+                status: document.getElementById('status').value,
+                location: document.getElementById('location').value,
+                repairInfo: document.getElementById('repairInfo').value
+            };
+
+            fetch('/api/bikes/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        });
+
+        function deleteBike() {
+            const bikeNumber = document.getElementById('deleteBikeNumber').value;
+            fetch('/api/bikes/delete/' + bikeNumber, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log('Bike deleted successfully');
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

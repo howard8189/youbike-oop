@@ -3,7 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Register | YouBike Rental</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f8f8;
+        }
+        .register-container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .register-container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .register-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .register-container label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .register-container input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .register-container button {
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #ff8000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .register-container button:hover {
+            background-color: #e67300;
+        }
+    </style>
     <script>
         function submitForm(event) {
             event.preventDefault(); // 阻止表單的預設提交行為
@@ -23,6 +74,7 @@
                 body: JSON.stringify(formData)
             }).then(response => {
                 if (response.ok) {
+                    window.location.href = '/login'; // 成功後跳轉到登入頁面
                     return response.json();
                 }
                 throw new Error('Something went wrong');
@@ -37,31 +89,21 @@
     </script>
 </head>
 <body>
-    <h1>Register New Account</h1>
-    <form onsubmit="submitForm(event)">
-        <div>
-            <label for="phoneNumber">Phone Number:</label>
+    <div class="register-container">
+        <h1>會員註冊</h1>
+        <form onsubmit="submitForm(event)">
+            <label for="phoneNumber">請輸入手機號碼（帳號）:</label>
             <input type="text" id="phoneNumber" name="phoneNumber" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
+            <label for="password">請輸入密碼:</label>
             <input type="password" id="password" name="password" required>
-        </div>
-        <div>
-            <label for="email">Email:</label>
+            <label for="email">請輸入電子郵件:</label>
             <input type="email" id="email" name="email" required>
-        </div>
-        <div>
-            <label for="nationalId">National ID:</label>
+            <label for="nationalId">請輸入身份證號碼:</label>
             <input type="text" id="nationalId" name="nationalId" required>
-        </div>
-        <div>
-            <label for="easycardNumber">EasyCard Number:</label>
+            <label for="easycardNumber">請輸入悠遊卡號碼:</label>
             <input type="text" id="easycardNumber" name="easycardNumber">
-        </div>
-        <div>
-            <button type="submit">Register</button>
-        </div>
-    </form>
+            <button type="submit">加入會員</button>
+        </form>
+    </div>
 </body>
 </html>

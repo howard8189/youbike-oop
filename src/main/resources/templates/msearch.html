@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cross Area Bikes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #ff8000;
+        }
+        .header a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #000;
+            font-size: 18px;
+        }
+        .header a img {
+            height: 20px;
+            margin-left: 10px;
+        }
+        .content {
+            margin-top: 80px;
+            width: 90%;
+            max-width: 1000px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #ff8000;
+            color: #fff;
+        }
+    </style>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>跨境查詢</h1>
+        <a th:href="@{/maintenance}">
+            返回
+            <img th:src="@{/images/return.jpeg}" alt="返回">
+        </a>
+    </div>
+    <div class="content">
+        <table>
+            <thead>
+                <tr>
+                    <th>車輛編號</th>
+                    <th>車輛類型</th>
+                    <th>歸屬地區</th>
+                    <th>狀態</th>
+                    <th>現在位置</th>
+                    <th>維修資訊</th>
+                </tr>
+            </thead>
+            <tbody id="bikeTable">
+                <!-- Bikes will be loaded here -->
+                <tr th:each="bike : ${bikes}">
+                    <td th:text="${bike.bikeNumber}"></td>
+                    <td th:text="${bike.bikeType}"></td>
+                    <td th:text="${bike.area}"></td>
+                    <td th:text="${bike.status}"></td>
+                    <td th:text="${bike.location}"></td>
+                    <td th:text="${bike.repairInfo}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        window.onload = function() {
+            loadCrossAreaBikes();
+        };
+
+        function loadCrossAreaBikes() {
+            axios.get('/api/bikes/cross-area')
+                .then(function (response) {
+                    const bikes = response.data;
+                    const bikeTable = document.getElementById('bikeTable');
+                    bikeTable.innerHTML = ''; // Clear existing entries
+
+                    bikes.forEach(function (bike) {
+                        const row = bikeTable.insertRow();
+                        row.insertCell(0).innerHTML = bike.bikeNumber;
+                        row.insertCell(1).innerHTML = bike.bikeType;
+                        row.insertCell(2).innerHTML = bike.area;
+                        row.insertCell(3).innerHTML = bike.status;
+                        row.insertCell(4).innerHTML = bike.location;
+                        row.insertCell(5).innerHTML = bike.repairInfo;
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    alert('Failed to load cross area bikes');
+                });
+        }
+    </script>
+</body>
+</html>

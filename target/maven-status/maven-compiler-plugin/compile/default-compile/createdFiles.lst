@@ -7,7 +7,6 @@ com/youbikerental/model/Post.class
 com/youbikerental/model/User.class
 com/youbikerental/config/SecurityConfig.class
 com/youbikerental/service/PostService.class
-com/youbikerental/config/MongoDBConfig.class
 com/youbikerental/repository/BikeRepository.class
 com/youbikerental/YoubikeRentalApplication.class
 com/youbikerental/service/EasyCardService.class

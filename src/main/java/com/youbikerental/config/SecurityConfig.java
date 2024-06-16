@@ -7,23 +7,39 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, PersistentTokenRepository tokenRepository) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())  // 使用新方式來禁用CSRF保護
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers("/", "/home", "/register", "/api/users/register").permitAll()  // 確保註冊API不需要認證
-            	    .anyRequest().authenticated())
-            //.formLogin(form -> form
-            //    .loginPage("/login")
-            //    .permitAll())
-            .logout().disable();
+                .requestMatchers("/", "/home", "/login", "/register", "/api/users/register", "/images/**").permitAll()
+                .requestMatchers("/maintenance", "/maintenance/**", "/userlogin", "/api/users/maintenance", "/api/bikes/**", "/rental").authenticated())
+            .formLogin(form -> form
+                .loginPage("/login")
+                .defaultSuccessUrl("/userlogin", true)
+                .permitAll())
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .deleteCookies("JSESSIONID", "remember-me")
+                .permitAll())
+            .rememberMe(rememberMe -> rememberMe
+                .tokenRepository(tokenRepository)
+                .tokenValiditySeconds(86400)); // 24 hours
+
+        // Enable session management
+        http.sessionManagement(session -> session
+            .sessionFixation(sessionFixation -> sessionFixation.migrateSession())
+            .invalidSessionUrl("/login")
+            .maximumSessions(1)
+            .expiredUrl("/login"));
+
         return http.build();
     }
 

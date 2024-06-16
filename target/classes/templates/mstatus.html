@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search and Update Bike</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f8f8f8;
+        }
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #ff8000;
+        }
+        .header a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #000;
+            font-size: 18px;
+        }
+        .header a img {
+            height: 20px;
+            margin-left: 10px;
+        }
+        .content {
+            margin-top: 80px;
+            width: 90%;
+            max-width: 500px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .content input,
+        .content select,
+        .content button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .content button {
+            background-color: #ff8000;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+        .content button:hover {
+            background-color: #e67300;
+        }
+    </style>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>搜尋並更新車輛</h1>
+        <a th:href="@{/maintenance}">
+            返回
+            <img th:src="@{/images/return.jpeg}" alt="返回">
+        </a>
+    </div>
+    <div class="content">
+        <h1>搜尋車輛編號</h1>
+        <input type="text" id="searchBikeNumber" placeholder="輸入車輛編號">
+        <button onclick="searchBike()">搜尋</button>
+
+        <div id="bikeForm" style="display:none;">
+            <input type="text" id="bikeNumber" placeholder="車輛編號" required>
+            <select id="bikeType">
+                <option value="2.0">2.0</option>
+                <option value="2.0E">2.0E</option>
+            </select>
+            <input type="text" id="area" placeholder="地區" required>
+            <select id="status">
+                <option value="available">可用</option>
+                <option value="rented">已租借</option>
+                <option value="out_of_service">維修中</option>
+                <option value="lost">遺失</option>
+            </select>
+            <input type="text" id="location" placeholder="位置" required>
+            <input type="text" id="repairInfo" placeholder="維修資訊">
+            <button onclick="deleteAndAddBike()">更新</button>
+        </div>
+    </div>
+
+    <script>
+        function searchBike() {
+            var bikeNumber = document.getElementById('searchBikeNumber').value;
+            axios.get(`/api/bikes/search/${bikeNumber}`)
+                .then(function (response) {
+                    document.getElementById('bikeNumber').value = response.data.bikeNumber;
+                    document.getElementById('bikeType').value = response.data.bikeType;
+                    document.getElementById('area').value = response.data.area;
+                    document.getElementById('status').value = response.data.status;
+                    document.getElementById('location').value = response.data.location;
+                    document.getElementById('repairInfo').value = response.data.repairInfo;
+                    document.getElementById('bikeForm').style.display = 'block';
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    alert('找不到車輛或發生錯誤！');
+                });
+        }
+
+        function deleteAndAddBike() {
+            var bikeNumber = document.getElementById('bikeNumber').value;
+            axios.delete(`/api/bikes/delete/${bikeNumber}`)
+                .then(function (deleteResponse) {
+                    var bikeData = {
+                        bikeNumber: document.getElementById('bikeNumber').value,
+                        bikeType: document.getElementById('bikeType').value,
+                        area: document.getElementById('area').value,
+                        status: document.getElementById('status').value,
+                        location: document.getElementById('location').value,
+                        repairInfo: document.getElementById('repairInfo').value
+                    };
+                    return axios.post('/api/bikes/add', bikeData);
+                })
+                .then(function (addResponse) {
+                    alert('車輛更新成功');
+                    document.getElementById('bikeForm').style.display = 'none'; // Hide form after update
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    alert('更新失敗');
+                });
+        }
+    </script>
+</body>
+</html>
