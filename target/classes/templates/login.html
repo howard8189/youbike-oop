@@ -70,16 +70,11 @@
 <body>
     <div class="login-container">
         <h1>會員登入</h1>
-        <form id="loginForm">
+        <form th:action="@{/api/users/login}" method="post">
             <label for="phoneNumber">請輸入手機號碼（帳號）:</label>
             <input type="text" id="phoneNumber" name="phoneNumber" required>
             <label for="password">請輸入密碼:</label>
             <input type="password" id="password" name="password" required>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" id="remember-me" name="remember-me"> 記住我
-                </label>
-            </div>
             <button type="submit">登入</button>
         </form>
         <div class="register-link">
@@ -89,37 +84,5 @@
             </form>
         </div>
     </div>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            const password = document.getElementById('password').value;
-            const rememberMe = document.getElementById('remember-me').checked;
-
-            fetch('/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    phoneNumber: phoneNumber,
-                    password: password,
-                    'remember-me': rememberMe ? 'on' : ''
-                })
-            }).then(response => {
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    throw new Error('Login failed');
-                }
-            }).then(text => {
-                const redirectUrl = text.includes('maintenance') ? '/maintenance' : '/userdashboard';
-                window.location.href = redirectUrl;
-            }).catch(error => {
-                console.error('Error:', error);
-                window.location.href = '/login?error=true';
-            });
-        });
-    </script>
 </body>
 </html>
